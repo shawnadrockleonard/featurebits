@@ -10,70 +10,58 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
+#if NETCOREAPP3_0
+using Microsoft.Extensions.Hosting;
+#endif
 
 namespace FeatureBits.Data.WebApi.Test
 {
     public class Startup
     {
         private const string FeatureBitsDbConnectionStringKey = "FeatureBitsDbContext";
-        private IHostingEnvironment EnvironmentHost { get; }
         public IConfiguration Configuration { get; }
 
-        public Startup(IHostingEnvironment environment)
+#if NETCOREAPP3_0
+        public Startup(IWebHostEnvironment env)
+#else
+        public Startup(IHostingEnvironment env)
+#endif
         {
-            EnvironmentHost = environment;
-            Configuration = BuildConfiguration();
-        }
+            var builder = new ConfigurationBuilder();
 
-        /// <summary>
-        /// Build configuration from AppSettings, Environment Variables, Azure Key Valut and (User Secrets - DEV only).
-        /// </summary>
-        /// <returns><see cref="IConfiguration"/></returns>
-        private IConfigurationRoot BuildConfiguration()
-        {
-            var configurationBuilder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .AddUserSecrets(typeof(Startup).Assembly);
-
-            if (EnvironmentHost.IsDevelopment())
+            if (env.IsDevelopment())
             {
-                // Re-add User secrets so it takes precedent for local development
-                configurationBuilder.AddUserSecrets(typeof(Startup).Assembly);
+                builder.AddUserSecrets<Startup>();
             }
-
-            return configurationBuilder.Build();
+            Configuration = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
-#if !NET452
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-#else
             services.AddMvc();
-#endif
-            string featureBitsConnectionString = Configuration.GetConnectionString(FeatureBitsDbConnectionStringKey);
-            services.AddDbContext<FeatureBitsEfDbContext>(options => options.UseSqlServer(featureBitsConnectionString));
-            services.AddTransient<IFeatureBitsRepo, FeatureBitsEfRepo>((serviceProvider) =>
-            {
-                DbContextOptionsBuilder<FeatureBitsEfDbContext> options = new DbContextOptionsBuilder<FeatureBitsEfDbContext>();
-                options.UseSqlServer(featureBitsConnectionString);
-                var context = new FeatureBitsEfDbContext(options.Options);
-                return new FeatureBitsEfRepo(context);
-            });
-            services.AddTransient<IFeatureBitEvaluator, FeatureBitEvaluator>();
+
+            string connStr = Configuration["connStr"];
+            services.AddDbContext<FeatureBitsEfDbContext>(options => options.UseSqlServer(connStr));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
+#if NETCOREAPP3_0
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+#else
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+#endif
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+#if NETCOREAPP3_0
+            app.UseRouting();
+#else
             app.UseMvc();
+#endif
         }
     }
 }
