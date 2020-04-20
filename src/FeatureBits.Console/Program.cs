@@ -67,21 +67,17 @@ namespace Dotnet.FBit
         {
             IFeatureBitsRepo repo;
             bool useTable = string.IsNullOrEmpty(opts.DatabaseConnectionString);
-            var dbConnStr = useTable ? opts.AzureTableConnectionString : opts.DatabaseConnectionString;
-
             if (!useTable)
             {
-                System.Diagnostics.Trace.TraceInformation($"Database mode {dbConnStr}");
                 DbContextOptionsBuilder<FeatureBitsEfDbContext> options =
                     new DbContextOptionsBuilder<FeatureBitsEfDbContext>();
-                options.UseSqlServer(dbConnStr);
+                options.UseSqlServer(opts.DatabaseConnectionString);
                 var context = new FeatureBitsEfDbContext(options.Options);
                 repo = new FeatureBitsEfRepo(context);
             }
             else
             {
-                System.Diagnostics.Trace.TraceInformation($"Azure Table mode {dbConnStr}");
-                repo = new FeatureBitsTableStorageRepo(dbConnStr, opts.AzureTableName);
+                repo = new FeatureBitsTableStorageRepo(opts.AzureTableConnectionString, opts.AzureTableName);
             }
 
             return repo;

@@ -1,10 +1,10 @@
 ﻿using FeatureBits.Data.EF;
 using Microsoft.EntityFrameworkCore;
-#if NET452
-public class DesignTimeDbContextFactory
-#else
+#if !NET452
 using Microsoft.EntityFrameworkCore.Design;
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<FeatureBitsEfDbContext>
+#else
+    public class DesignTimeDbContextFactory
 #endif
 {
     /// <summary>

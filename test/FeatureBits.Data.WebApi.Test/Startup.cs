@@ -18,7 +18,6 @@ namespace FeatureBits.Data.WebApi.Test
 {
     public class Startup
     {
-        private const string FeatureBitsDbConnectionStringKey = "FeatureBitsDbContext";
         public IConfiguration Configuration { get; }
 
 #if NETCOREAPP3_0

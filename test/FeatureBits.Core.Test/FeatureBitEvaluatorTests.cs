@@ -95,6 +95,7 @@ namespace FeatureBits.Core.Test
             System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", null);
         }
 
+        [Fact]
         public void It_can_evaluate_an_IncludedEnvironment_FeatureBit_to_true()
         {
             System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "LocalDevelopment");

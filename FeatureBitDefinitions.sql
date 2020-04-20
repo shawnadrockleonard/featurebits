@@ -10,9 +10,8 @@ CREATE TABLE [dbo].[FeatureBitDefinitions](
 	[Name] [nvarchar](100) NOT NULL,
 	[OnOff] [bit] NOT NULL,
 	[ExactAllowedPermissionLevel] [int] NULL,
-	[Dependencies] [varchar](255) NULL,
-
 	[IncludedEnvironments] [nvarchar](300) NULL,
+	[Dependencies] [varchar](255) NULL,
 
  CONSTRAINT [PK_FeatureBitDefinitions] PRIMARY KEY CLUSTERED 
 (

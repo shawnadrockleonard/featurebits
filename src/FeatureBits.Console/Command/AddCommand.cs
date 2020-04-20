@@ -44,11 +44,13 @@ namespace Dotnet.FBit.Command
                 returnValue = 1;
                 SystemContext.ConsoleErrorWriteLine(e.Message);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 returnValue = 1;
                 SystemContext.ConsoleErrorWriteLine(e.ToString());
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             return returnValue;
         }

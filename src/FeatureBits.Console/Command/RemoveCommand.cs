@@ -98,7 +98,7 @@ namespace Dotnet.FBit.Command
             return 0;
         }
 
-        public IFeatureBitDefinition BuildBit(IFeatureBitDefinition featureBitDefinition, IEnumerable<string> names)
+        public static IFeatureBitDefinition BuildBit(IFeatureBitDefinition featureBitDefinition, IEnumerable<string> names)
         {
             var now = SystemContext.Now();
             var username = SystemContext.GetEnvironmentVariable("USERNAME");

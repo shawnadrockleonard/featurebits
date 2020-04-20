@@ -1,6 +1,8 @@
 <#
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the MIT License. See License.txt in the project root for license information.
+
+Provides a method to pack the repo for local usage.
 #>
 
 [CmdletBinding()]
@@ -8,15 +10,12 @@ param(
     [Parameter(HelpMessage='NuGet package version')]
     [AllowEmptyString()]
     [string]
-    $PackageVersion,
-	
-    [Parameter(Mandatory = $false, HelpMessage = "Fully qualified path to running scripts")]
-    [ValidateScript( {Test-Path $_ -PathType Container})]
-    [string]$nugetDirectory = "C:\Users\shawn.leonard\source\repos\localpackages"
+    $PackageVersion
 )
 
 If ($PackageVersion)
 {
+    $nugetDirectory = ("{0}\FeatureBits\Packages" -f $env:APPDATA)
     Write-Host "Package-Nuget: building packages..."
 
     dotnet pack ".\src\FeatureBits.Core\FeatureBits.Core.csproj" /p:PackageVersion=$PackageVersion
