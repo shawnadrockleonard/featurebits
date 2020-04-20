@@ -68,6 +68,7 @@ namespace Dotnet.FBit.Command
                 ExcludedEnvironments = _opts.ExcludedEnvironments,
                 MinimumAllowedPermissionLevel = _opts.MinimumPermissionLevel,
                 ExactAllowedPermissionLevel = _opts.ExactPermissionLevel,
+                IncludedEnvironments = _opts.IncludedEnvironments,
                 Dependencies = await ValidateHierarchyAndEnsureIds()
             };
         }

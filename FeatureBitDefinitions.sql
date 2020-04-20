@@ -11,6 +11,9 @@ CREATE TABLE [dbo].[FeatureBitDefinitions](
 	[OnOff] [bit] NOT NULL,
 	[ExactAllowedPermissionLevel] [int] NULL,
 	[Dependencies] [varchar](255) NULL,
+
+	[IncludedEnvironments] [nvarchar](300) NULL,
+
  CONSTRAINT [PK_FeatureBitDefinitions] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
